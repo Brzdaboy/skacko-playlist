@@ -1,0 +1,269 @@
+:root {
+  --green-dark: #0f3d1f;
+  --green: #1a7a2d;
+  --green-light: #2e9e42;
+  --yellow: #ffd100;
+  --yellow-dim: #e0b800;
+  --text: #f4fbf4;
+  --text-dim: #b9d6bd;
+  --card-bg: rgba(255, 255, 255, 0.06);
+  --card-bg-active: rgba(255, 209, 0, 0.14);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--green-dark);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: radial-gradient(circle at 50% -10%, var(--green) 0%, var(--green-dark) 55%);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: calc(20px + var(--safe-top)) 18px calc(24px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.app-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  letter-spacing: 0.03em;
+  color: var(--yellow);
+  font-weight: 800;
+}
+
+.subtitle {
+  margin: 2px 0 0;
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  margin-top: 18px;
+}
+
+.goal-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.goal-button {
+  --size: min(58vw, 260px);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  border: none;
+  background: radial-gradient(circle at 35% 30%, var(--yellow) 0%, var(--yellow-dim) 70%);
+  color: var(--green-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 0 0 8px rgba(255, 209, 0, 0.12), 0 10px 30px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.2s ease;
+  touch-action: manipulation;
+}
+
+.goal-button:active {
+  transform: scale(0.96);
+}
+
+.goal-button.playing {
+  background: radial-gradient(circle at 35% 30%, #fff1a8 0%, var(--yellow) 70%);
+  box-shadow: 0 0 0 8px rgba(255, 209, 0, 0.28), 0 0 40px 6px rgba(255, 209, 0, 0.45), 0 10px 30px rgba(0, 0, 0, 0.45);
+  animation: pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+
+.goal-icon {
+  width: 34%;
+  height: 34%;
+}
+
+.icon-hidden {
+  display: none;
+}
+
+.goal-label {
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+}
+
+.goal-hint {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.playlist-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.playlist-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.playlist-header h2 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.offline-badge {
+  font-size: 0.7rem;
+  background: rgba(255, 209, 0, 0.15);
+  color: var(--yellow);
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 209, 0, 0.35);
+}
+
+.playlist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.track {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--card-bg);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.track:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.track.active {
+  background: var(--card-bg-active);
+  border-color: rgba(255, 209, 0, 0.4);
+}
+
+.track-play {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--yellow);
+}
+
+.track.active .track-play {
+  background: var(--yellow);
+  color: var(--green-dark);
+}
+
+.track-play svg {
+  width: 18px;
+  height: 18px;
+}
+
+.track-title {
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.eq {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 16px;
+  width: 16px;
+}
+
+.eq span {
+  display: block;
+  width: 3px;
+  background: var(--yellow);
+  border-radius: 2px;
+  animation: eq 0.9s ease-in-out infinite;
+}
+
+/* active track-play has a solid yellow background, so the bars need to be
+   dark to stay visible against it */
+.track.active .track-play .eq span {
+  background: var(--green-dark);
+}
+.eq span:nth-child(1) { height: 40%; animation-delay: -0.6s; }
+.eq span:nth-child(2) { height: 100%; animation-delay: -0.3s; }
+.eq span:nth-child(3) { height: 65%; animation-delay: 0s; }
+
+@keyframes eq {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1); }
+}
+
+.app-footer {
+  text-align: center;
+  margin-top: 22px;
+}
+
+.app-footer p {
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+@media (min-width: 520px) {
+  .app { padding-top: 40px; }
+}

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Skácko Playlist – SK Boršice</title>
+<meta name="description" content="Gólová siréna a playlist pro SK Boršice" />
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="theme-color" content="#1a7a2d" />
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="icon" href="icons/favicon-16.png" sizes="16x16" type="image/png" />
+
+<!-- iOS home screen support -->
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Skácko" />
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <header class="app-header">
+    <h1>Skácko Playlist</h1>
+    <p class="subtitle">SK Boršice</p>
+  </header>
+
+  <main>
+    <section class="goal-section" aria-label="Gólová siréna">
+      <button id="goalBtn" class="goal-button" type="button" aria-pressed="false">
+        <svg id="goalIconPlay" class="goal-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 5v14l11-7z" fill="currentColor"/>
+        </svg>
+        <svg id="goalIconStop" class="goal-icon icon-hidden" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/>
+        </svg>
+        <span class="goal-label" id="goalLabel">GÓL!</span>
+      </button>
+      <p class="goal-hint">Klikni při gólu</p>
+    </section>
+
+    <section class="playlist-section" aria-label="Playlist">
+      <div class="playlist-header">
+        <h2>Playlist</h2>
+        <span id="offlineBadge" class="offline-badge" hidden>Offline režim</span>
+      </div>
+      <ul id="playlist" class="playlist"></ul>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Hraje i se zamčenou obrazovkou · Přidej si appku na plochu telefonu pro nejlepší zážitek</p>
+  </footer>
+</div>
+
+<audio id="player" preload="none" playsinline></audio>
+
+<script src="app.js"></script>
+</body>
+</html>

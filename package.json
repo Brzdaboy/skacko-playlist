@@ -1,0 +1,10 @@
+{
+  "name": "skacko-playlist",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Gólová siréna a playlist pro SK Boršice – PWA na hraní písniček na tribuně.",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "generate-playlist": "node scripts/generate-playlist.js"
+  }
+}
