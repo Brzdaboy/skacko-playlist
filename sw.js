@@ -1,7 +1,7 @@
 // Service worker for Skácko Playlist
 // Bump CACHE_VERSION whenever you change any cached file (index.html, styles.css, app.js, icons, playlist.json)
 // so returning phones pick up the update instead of serving a stale cache.
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v2";
 const CACHE_NAME = `skacko-playlist-${CACHE_VERSION}`;
 
 // App shell + the goal siren are precached on install so the core app
@@ -14,9 +14,7 @@ const PRECACHE_URLS = [
   "manifest.webmanifest",
   "assets/playlist.json",
   "assets/gol-song.mp3",
-  "icons/icon-192.png",
-  "icons/icon-512.png",
-  "icons/apple-touch-icon.png",
+  "icons/skb-logo-800x800x200-200x200.png",
 ];
 
 self.addEventListener("install", (event) => {

@@ -10,10 +10,13 @@
   const goalLabel = document.getElementById("goalLabel");
   const playlistEl = document.getElementById("playlist");
   const offlineBadge = document.getElementById("offlineBadge");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
 
   /** @type {{file:string, title:string, id:string}[]} */
   let tracks = [];
-  let currentId = null; // id of whatever is currently loaded ("gol" or "t<index>")
+  let currentId = null;
+  let currentTrackIndex = -1;
   let isPlaying = false;
 
   function setPlayingUI(playing) {
@@ -45,6 +48,22 @@
     return '<span class="eq"><span></span><span></span><span></span></span>';
   }
 
+  function playByIndex(index) {
+    if (tracks.length === 0) return;
+    if (index < 0) index = tracks.length - 1;
+    if (index >= tracks.length) index = 0;
+    currentTrackIndex = index;
+    loadAndPlay(tracks[index]);
+  }
+
+  function playNext() {
+    playByIndex(currentTrackIndex < 0 ? 0 : currentTrackIndex + 1);
+  }
+
+  function playPrev() {
+    playByIndex(currentTrackIndex < 0 ? tracks.length - 1 : currentTrackIndex - 1);
+  }
+
   function loadAndPlay(track) {
     const isCurrent = currentId === track.id;
 
@@ -73,8 +92,7 @@
       artist: "SK Boršice",
       album: "Skácko Playlist",
       artwork: [
-        { src: "icons/icon-192.png", sizes: "192x192", type: "image/png" },
-        { src: "icons/icon-512.png", sizes: "512x512", type: "image/png" },
+        { src: "icons/skb-logo-800x800x200-200x200.png", sizes: "800x800", type: "image/png" },
       ],
     });
   }
@@ -91,7 +109,10 @@
         <span class="track-play">${playSvgSmall()}</span>
         <span class="track-title">${escapeHtml(track.title)}</span>
       `;
-      const activate = () => loadAndPlay(track);
+      const activate = () => {
+        currentTrackIndex = index;
+        loadAndPlay(track);
+      };
       li.addEventListener("click", activate);
       li.addEventListener("keydown", (e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -109,6 +130,34 @@
     return div.innerHTML;
   }
 
+  // --- prev / next buttons ---
+  prevBtn.addEventListener("click", playPrev);
+  nextBtn.addEventListener("click", playNext);
+
+  // --- swipe left / right ---
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  document.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+      if (dx < 0) playNext();
+      else playPrev();
+    }
+  }, { passive: true });
+
+  // --- keyboard arrow keys ---
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") playNext();
+    if (e.key === "ArrowLeft") playPrev();
+  });
+
   // --- goal button ---
   goalBtn.addEventListener("click", () => {
     if (navigator.vibrate) {
@@ -120,7 +169,10 @@
   // --- shared audio element events ---
   player.addEventListener("play", () => setPlayingUI(true));
   player.addEventListener("pause", () => setPlayingUI(false));
-  player.addEventListener("ended", () => setPlayingUI(false));
+  player.addEventListener("ended", () => {
+    setPlayingUI(false);
+    if (currentId !== "gol" && currentTrackIndex >= 0) playNext();
+  });
 
   if ("mediaSession" in navigator) {
     navigator.mediaSession.setActionHandler("play", () => player.play());
@@ -129,6 +181,8 @@
       player.pause();
       player.currentTime = 0;
     });
+    navigator.mediaSession.setActionHandler("nexttrack", playNext);
+    navigator.mediaSession.setActionHandler("previoustrack", playPrev);
   }
 
   // --- offline indicator ---

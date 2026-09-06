@@ -9,14 +9,13 @@
 <!-- PWA -->
 <link rel="manifest" href="manifest.webmanifest" />
 <meta name="theme-color" content="#1a7a2d" />
-<link rel="icon" href="icons/favicon-32.png" sizes="32x32" type="image/png" />
-<link rel="icon" href="icons/favicon-16.png" sizes="16x16" type="image/png" />
+<link rel="icon" href="icons/skb-logo-800x800x200-200x200.png" type="image/png" />
 
 <!-- iOS home screen support -->
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="Skácko" />
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+<link rel="apple-touch-icon" href="icons/skb-logo-800x800x200-200x200.png" />
 
 <link rel="stylesheet" href="styles.css" />
 </head>
@@ -46,7 +45,15 @@
     <section class="playlist-section" aria-label="Playlist">
       <div class="playlist-header">
         <h2>Playlist</h2>
-        <span id="offlineBadge" class="offline-badge" hidden>Offline režim</span>
+        <div class="nav-controls">
+          <button id="prevBtn" class="nav-btn" type="button" aria-label="Předchozí píseň">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z" fill="currentColor"/></svg>
+          </button>
+          <button id="nextBtn" class="nav-btn" type="button" aria-label="Další píseň">
+            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 18l8.5-6L6 6v12zm10.5 0h-2V6h2z" fill="currentColor"/></svg>
+          </button>
+          <span id="offlineBadge" class="offline-badge" hidden>Offline</span>
+        </div>
       </div>
       <ul id="playlist" class="playlist"></ul>
     </section>
