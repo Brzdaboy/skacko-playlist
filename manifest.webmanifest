@@ -1,6 +1,6 @@
 {
-  "name": "Skácko Playlist – SK Boršice",
-  "short_name": "Skácko",
+  "name": "SKáčko Playlist – SK Boršice",
+  "short_name": "SKáčko",
   "description": "Gólová siréna a playlist pro SK Boršice – jedno tlačítko na gólovou písničku a playlist na hraní na tribuně.",
   "start_url": "./index.html",
   "scope": "./",
