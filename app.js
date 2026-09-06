@@ -247,9 +247,9 @@
     navigator.mediaSession.setActionHandler("stop", () => { player.pause(); player.currentTime = 0; });
     navigator.mediaSession.setActionHandler("nexttrack", playNext);
     navigator.mediaSession.setActionHandler("previoustrack", playPrev);
-    // Disable default ±10s seek so lock screen shows prev/next instead
-    try { navigator.mediaSession.setActionHandler("seekforward", null); } catch (_) {}
-    try { navigator.mediaSession.setActionHandler("seekbackward", null); } catch (_) {}
+    // Map ±10s seek buttons to prev/next (lock screen can't be forced to show prev/next natively on iOS/Android)
+    try { navigator.mediaSession.setActionHandler("seekforward", playNext); } catch (_) {}
+    try { navigator.mediaSession.setActionHandler("seekbackward", playPrev); } catch (_) {}
   }
 
   // ─── Offline indicator ───
