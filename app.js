@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const GOL_SONG = { file: "assets/gol-song.mp3", title: "GÓL! – siréna", id: "gol" };
+  const GOL_SONG = { file: "assets/gol-song-02.MP3", title: "GÓL! – siréna", id: "gol" };
 
   const player = document.getElementById("player");
   const goalBtn = document.getElementById("goalBtn");
