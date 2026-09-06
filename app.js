@@ -10,14 +10,59 @@
   const goalLabel = document.getElementById("goalLabel");
   const playlistEl = document.getElementById("playlist");
   const offlineBadge = document.getElementById("offlineBadge");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
+
+  const playerBar = document.getElementById("playerBar");
+  const playerBarTitle = document.getElementById("playerBarTitle");
+  const barPrevBtn = document.getElementById("barPrevBtn");
+  const barPlayBtn = document.getElementById("barPlayBtn");
+  const barNextBtn = document.getElementById("barNextBtn");
+  const seekInput = document.getElementById("seekInput");
+  const seekFill = document.getElementById("seekFill");
+  const timeCurrent = document.getElementById("timeCurrent");
+  const timeDuration = document.getElementById("timeDuration");
 
   /** @type {{file:string, title:string, id:string}[]} */
   let tracks = [];
   let currentId = null;
   let currentTrackIndex = -1;
   let isPlaying = false;
+
+  // ─── UI helpers ───
+
+  function formatTime(secs) {
+    if (!isFinite(secs) || secs < 0) return "0:00";
+    const m = Math.floor(secs / 60);
+    const s = Math.floor(secs % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  }
+
+  function playSvgSmall() {
+    return '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+  }
+
+  function eqSvg() {
+    return '<span class="eq"><span></span><span></span><span></span></span>';
+  }
+
+  function barPlaySvg() {
+    return '<svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+  }
+
+  function barPauseSvg() {
+    return '<svg viewBox="0 0 24 24" width="26" height="26"><path d="M6 19h4V5H6zm8-14v14h4V5z" fill="currentColor"/></svg>';
+  }
+
+  // ─── Player bar ───
+
+  function showPlayerBar(track) {
+    playerBarTitle.textContent = track.title;
+    playerBar.hidden = false;
+    document.querySelector(".app").classList.add("player-open");
+    seekFill.style.width = "0%";
+    seekInput.value = 0;
+    timeCurrent.textContent = "0:00";
+    timeDuration.textContent = "0:00";
+  }
 
   function setPlayingUI(playing) {
     isPlaying = playing;
@@ -35,34 +80,15 @@
     document.querySelectorAll(".track").forEach((row) => {
       const active = playing && row.dataset.id === id;
       row.classList.toggle("active", active);
-      const playIcon = row.querySelector(".track-play");
-      playIcon.innerHTML = active ? eqSvg() : playSvgSmall();
+      row.querySelector(".track-play").innerHTML = active ? eqSvg() : playSvgSmall();
     });
+
+    // bar play/pause icon
+    const playlistPlaying = playing && id !== "gol";
+    barPlayBtn.innerHTML = playlistPlaying ? barPauseSvg() : barPlaySvg();
   }
 
-  function playSvgSmall() {
-    return '<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
-  }
-
-  function eqSvg() {
-    return '<span class="eq"><span></span><span></span><span></span></span>';
-  }
-
-  function playByIndex(index) {
-    if (tracks.length === 0) return;
-    if (index < 0) index = tracks.length - 1;
-    if (index >= tracks.length) index = 0;
-    currentTrackIndex = index;
-    loadAndPlay(tracks[index]);
-  }
-
-  function playNext() {
-    playByIndex(currentTrackIndex < 0 ? 0 : currentTrackIndex + 1);
-  }
-
-  function playPrev() {
-    playByIndex(currentTrackIndex < 0 ? tracks.length - 1 : currentTrackIndex - 1);
-  }
+  // ─── Playback ───
 
   function loadAndPlay(track) {
     const isCurrent = currentId === track.id;
@@ -75,15 +101,24 @@
     if (!isCurrent) {
       player.src = track.file;
       currentId = track.id;
+      if (track.id !== "gol") showPlayerBar(track);
     }
-    if (player.ended) {
-      player.currentTime = 0;
-    }
-    player.play().catch((err) => {
-      console.warn("Playback failed", err);
-    });
+    if (player.ended) player.currentTime = 0;
+
+    player.play().catch((err) => console.warn("Playback failed", err));
     updateMediaSession(track);
   }
+
+  function playByIndex(index) {
+    if (tracks.length === 0) return;
+    if (index < 0) index = tracks.length - 1;
+    if (index >= tracks.length) index = 0;
+    currentTrackIndex = index;
+    loadAndPlay(tracks[index]);
+  }
+
+  function playNext() { playByIndex(currentTrackIndex < 0 ? 0 : currentTrackIndex + 1); }
+  function playPrev() { playByIndex(currentTrackIndex < 0 ? tracks.length - 1 : currentTrackIndex - 1); }
 
   function updateMediaSession(track) {
     if (!("mediaSession" in navigator)) return;
@@ -96,6 +131,8 @@
       ],
     });
   }
+
+  // ─── Playlist render ───
 
   function renderPlaylist() {
     playlistEl.innerHTML = "";
@@ -115,10 +152,7 @@
       };
       li.addEventListener("click", activate);
       li.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          activate();
-        }
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(); }
       });
       playlistEl.appendChild(li);
     });
@@ -130,11 +164,44 @@
     return div.innerHTML;
   }
 
-  // --- prev / next buttons ---
-  prevBtn.addEventListener("click", playPrev);
-  nextBtn.addEventListener("click", playNext);
+  // ─── Goal button ───
 
-  // --- swipe left / right ---
+  goalBtn.addEventListener("click", () => {
+    if (navigator.vibrate) try { navigator.vibrate(30); } catch (_) {}
+    loadAndPlay(GOL_SONG);
+  });
+
+  // ─── Bar buttons ───
+
+  barPrevBtn.addEventListener("click", playPrev);
+  barNextBtn.addEventListener("click", playNext);
+  barPlayBtn.addEventListener("click", () => {
+    if (currentTrackIndex >= 0) loadAndPlay(tracks[currentTrackIndex]);
+  });
+
+  // ─── Seek & time ───
+
+  player.addEventListener("timeupdate", () => {
+    if (!player.duration) return;
+    const pct = (player.currentTime / player.duration) * 100;
+    seekFill.style.width = `${pct}%`;
+    seekInput.value = pct;
+    timeCurrent.textContent = formatTime(player.currentTime);
+  });
+
+  player.addEventListener("durationchange", () => {
+    timeDuration.textContent = formatTime(player.duration);
+  });
+
+  seekInput.addEventListener("input", () => {
+    if (!player.duration) return;
+    player.currentTime = (seekInput.value / 100) * player.duration;
+    seekFill.style.width = `${seekInput.value}%`;
+    timeCurrent.textContent = formatTime(player.currentTime);
+  });
+
+  // ─── Swipe & keyboard ───
+
   let touchStartX = 0;
   let touchStartY = 0;
 
@@ -147,26 +214,17 @@
     const dx = e.changedTouches[0].clientX - touchStartX;
     const dy = e.changedTouches[0].clientY - touchStartY;
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
-      if (dx < 0) playNext();
-      else playPrev();
+      if (dx < 0) playNext(); else playPrev();
     }
   }, { passive: true });
 
-  // --- keyboard arrow keys ---
   document.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") playNext();
     if (e.key === "ArrowLeft") playPrev();
   });
 
-  // --- goal button ---
-  goalBtn.addEventListener("click", () => {
-    if (navigator.vibrate) {
-      try { navigator.vibrate(30); } catch (_) {}
-    }
-    loadAndPlay(GOL_SONG);
-  });
+  // ─── Audio events ───
 
-  // --- shared audio element events ---
   player.addEventListener("play", () => setPlayingUI(true));
   player.addEventListener("pause", () => setPlayingUI(false));
   player.addEventListener("ended", () => {
@@ -177,23 +235,20 @@
   if ("mediaSession" in navigator) {
     navigator.mediaSession.setActionHandler("play", () => player.play());
     navigator.mediaSession.setActionHandler("pause", () => player.pause());
-    navigator.mediaSession.setActionHandler("stop", () => {
-      player.pause();
-      player.currentTime = 0;
-    });
+    navigator.mediaSession.setActionHandler("stop", () => { player.pause(); player.currentTime = 0; });
     navigator.mediaSession.setActionHandler("nexttrack", playNext);
     navigator.mediaSession.setActionHandler("previoustrack", playPrev);
   }
 
-  // --- offline indicator ---
-  function updateOnlineStatus() {
-    offlineBadge.hidden = navigator.onLine;
-  }
+  // ─── Offline indicator ───
+
+  function updateOnlineStatus() { offlineBadge.hidden = navigator.onLine; }
   window.addEventListener("online", updateOnlineStatus);
   window.addEventListener("offline", updateOnlineStatus);
   updateOnlineStatus();
 
-  // --- load playlist data then render ---
+  // ─── Load playlist ───
+
   fetch("assets/playlist.json")
     .then((res) => res.json())
     .then((data) => {
@@ -205,7 +260,8 @@
       playlistEl.innerHTML = '<li class="track" style="cursor:default">Playlist se nepodařilo načíst.</li>';
     });
 
-  // --- service worker registration (offline support) ---
+  // ─── Service worker ───
+
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker.register("sw.js").catch((err) => {

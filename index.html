@@ -45,15 +45,7 @@
     <section class="playlist-section" aria-label="Playlist">
       <div class="playlist-header">
         <h2>Playlist</h2>
-        <div class="nav-controls">
-          <button id="prevBtn" class="nav-btn" type="button" aria-label="Předchozí píseň">
-            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z" fill="currentColor"/></svg>
-          </button>
-          <button id="nextBtn" class="nav-btn" type="button" aria-label="Další píseň">
-            <svg viewBox="0 0 24 24" width="20" height="20"><path d="M6 18l8.5-6L6 6v12zm10.5 0h-2V6h2z" fill="currentColor"/></svg>
-          </button>
-          <span id="offlineBadge" class="offline-badge" hidden>Offline</span>
-        </div>
+        <span id="offlineBadge" class="offline-badge" hidden>Offline</span>
       </div>
       <ul id="playlist" class="playlist"></ul>
     </section>
@@ -62,6 +54,36 @@
   <footer class="app-footer">
     <p>Hraje i se zamčenou obrazovkou · Přidej si appku na plochu telefonu pro nejlepší zážitek</p>
   </footer>
+</div>
+
+<!-- Bottom player bar -->
+<div id="playerBar" class="player-bar" hidden>
+  <div class="player-seek">
+    <span class="seek-time" id="timeCurrent">0:00</span>
+    <div class="seek-track">
+      <div class="seek-track-bg"></div>
+      <div class="seek-fill" id="seekFill"></div>
+      <input type="range" class="seek-input" id="seekInput" min="0" max="100" value="0" step="0.1" aria-label="Pozice v písni">
+    </div>
+    <span class="seek-time" id="timeDuration">0:00</span>
+  </div>
+  <div class="player-row">
+    <div class="player-info">
+      <img class="player-thumb" src="icons/skb-logo-800x800x200-200x200.png" alt="" aria-hidden="true">
+      <span class="player-song-title" id="playerBarTitle"></span>
+    </div>
+    <div class="player-btns">
+      <button id="barPrevBtn" class="bar-btn" type="button" aria-label="Předchozí píseň">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z" fill="currentColor"/></svg>
+      </button>
+      <button id="barPlayBtn" class="bar-btn bar-play" type="button" aria-label="Přehrát">
+        <svg viewBox="0 0 24 24" width="26" height="26"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+      </button>
+      <button id="barNextBtn" class="bar-btn" type="button" aria-label="Další píseň">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 18l8.5-6L6 6v12zm10.5 0h-2V6h2z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
 </div>
 
 <audio id="player" preload="none" playsinline></audio>
