@@ -187,6 +187,15 @@
     seekFill.style.width = `${pct}%`;
     seekInput.value = pct;
     timeCurrent.textContent = formatTime(player.currentTime);
+    if ("mediaSession" in navigator) {
+      try {
+        navigator.mediaSession.setPositionState({
+          duration: player.duration,
+          playbackRate: player.playbackRate,
+          position: player.currentTime,
+        });
+      } catch (_) {}
+    }
   });
 
   player.addEventListener("durationchange", () => {
@@ -238,6 +247,9 @@
     navigator.mediaSession.setActionHandler("stop", () => { player.pause(); player.currentTime = 0; });
     navigator.mediaSession.setActionHandler("nexttrack", playNext);
     navigator.mediaSession.setActionHandler("previoustrack", playPrev);
+    // Disable default ±10s seek so lock screen shows prev/next instead
+    try { navigator.mediaSession.setActionHandler("seekforward", null); } catch (_) {}
+    try { navigator.mediaSession.setActionHandler("seekbackward", null); } catch (_) {}
   }
 
   // ─── Offline indicator ───
