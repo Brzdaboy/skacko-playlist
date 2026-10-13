@@ -4,6 +4,8 @@
   --green-light: #2e9e42;
   --yellow: #ffd100;
   --yellow-dim: #e0b800;
+  --red: #e02020;
+  --red-dim: #b51818;
   --text: #f4fbf4;
   --text-dim: #b9d6bd;
   --card-bg: rgba(255, 255, 255, 0.06);
@@ -75,8 +77,22 @@ main {
   gap: 10px;
 }
 
+.goal-buttons-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 18px;
+}
+
+.goal-btn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
 .goal-button {
-  --size: min(58vw, 260px);
+  --size: min(42vw, 185px);
   width: var(--size);
   height: var(--size);
   border-radius: 50%;
@@ -101,6 +117,18 @@ main {
 .goal-button.playing {
   background: radial-gradient(circle at 35% 30%, #fff1a8 0%, var(--yellow) 70%);
   box-shadow: 0 0 0 8px rgba(255, 209, 0, 0.28), 0 0 40px 6px rgba(255, 209, 0, 0.45), 0 10px 30px rgba(0, 0, 0, 0.45);
+  animation: pulse 1.1s ease-in-out infinite;
+}
+
+.opponent-button {
+  background: radial-gradient(circle at 35% 30%, var(--red) 0%, var(--red-dim) 70%);
+  color: #fff;
+  box-shadow: 0 0 0 8px rgba(224, 32, 32, 0.12), 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.opponent-button.playing {
+  background: radial-gradient(circle at 35% 30%, #ff6666 0%, var(--red) 70%);
+  box-shadow: 0 0 0 8px rgba(224, 32, 32, 0.28), 0 0 40px 6px rgba(224, 32, 32, 0.45), 0 10px 30px rgba(0, 0, 0, 0.45);
   animation: pulse 1.1s ease-in-out infinite;
 }
 

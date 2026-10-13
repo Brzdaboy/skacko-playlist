@@ -2,12 +2,17 @@
   "use strict";
 
   const GOL_SONG = { file: "assets/gol-song-02.MP3", title: "GÓL! – siréna", id: "gol" };
+  const OPPONENT_SONG = { file: "assets/zblaznilo-se-paze.mp3", title: "Zbláznil se páže", id: "opponent" };
 
   const player = document.getElementById("player");
   const goalBtn = document.getElementById("goalBtn");
   const goalIconPlay = document.getElementById("goalIconPlay");
   const goalIconStop = document.getElementById("goalIconStop");
   const goalLabel = document.getElementById("goalLabel");
+  const opponentBtn = document.getElementById("opponentBtn");
+  const opponentIconPlay = document.getElementById("opponentIconPlay");
+  const opponentIconStop = document.getElementById("opponentIconStop");
+  const opponentLabel = document.getElementById("opponentLabel");
   const playlistEl = document.getElementById("playlist");
   const offlineBadge = document.getElementById("offlineBadge");
 
@@ -76,6 +81,14 @@
     goalIconStop.classList.toggle("icon-hidden", !goalActive);
     goalLabel.textContent = goalActive ? "STOP" : "GÓL!";
 
+    // opponent button
+    const opponentActive = playing && id === "opponent";
+    opponentBtn.classList.toggle("playing", opponentActive);
+    opponentBtn.setAttribute("aria-pressed", String(opponentActive));
+    opponentIconPlay.classList.toggle("icon-hidden", opponentActive);
+    opponentIconStop.classList.toggle("icon-hidden", !opponentActive);
+    opponentLabel.textContent = opponentActive ? "STOP" : "GÓL!";
+
     // playlist rows
     document.querySelectorAll(".track").forEach((row) => {
       const active = playing && row.dataset.id === id;
@@ -84,7 +97,7 @@
     });
 
     // bar play/pause icon
-    const playlistPlaying = playing && id !== "gol";
+    const playlistPlaying = playing && id !== "gol" && id !== "opponent";
     barPlayBtn.innerHTML = playlistPlaying ? barPauseSvg() : barPlaySvg();
   }
 
@@ -101,7 +114,7 @@
     if (!isCurrent) {
       player.src = track.file;
       currentId = track.id;
-      if (track.id !== "gol") showPlayerBar(track);
+      if (track.id !== "gol" && track.id !== "opponent") showPlayerBar(track);
     }
     if (player.ended) player.currentTime = 0;
 
@@ -171,6 +184,11 @@
     loadAndPlay(GOL_SONG);
   });
 
+  opponentBtn.addEventListener("click", () => {
+    if (navigator.vibrate) try { navigator.vibrate(30); } catch (_) {}
+    loadAndPlay(OPPONENT_SONG);
+  });
+
   // ─── Bar buttons ───
 
   barPrevBtn.addEventListener("click", playPrev);
@@ -238,7 +256,7 @@
   player.addEventListener("pause", () => setPlayingUI(false));
   player.addEventListener("ended", () => {
     setPlayingUI(false);
-    if (currentId !== "gol" && currentTrackIndex >= 0) playNext();
+    if (currentId !== "gol" && currentId !== "opponent" && currentTrackIndex >= 0) playNext();
   });
 
   if ("mediaSession" in navigator) {
