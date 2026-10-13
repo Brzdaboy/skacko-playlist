@@ -50,5 +50,21 @@
   {
     "file": "assets/songs/wohnout-svaz-ceskych-bohemu-official-videoclip.mp3",
     "title": "Wohnout - Svaz českých bohémů"
+  },
+  {
+    "file": "assets/songs/elan-neviem-byt-sam.mp3",
+    "title": "ELÁN - Neviem byť sám"
+  },
+  {
+    "file": "assets/songs/elan-tanecnice-z-lucnice.mp3",
+    "title": "ELÁN - Tanečnice z Lúčnice"
+  },
+  {
+    "file": "assets/songs/elan-voda-co-ma-drzi-nad-vodou.mp3",
+    "title": "ELÁN - Voda čo ma drží nad vodou"
+  },
+  {
+    "file": "assets/songs/hody-mile-hody.mp3",
+    "title": "Hody, milé hody"
   }
 ]
